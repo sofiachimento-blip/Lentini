@@ -397,16 +397,16 @@
                                 <span class="bg-emerald-100 text-emerald-800 text-[10px] font-black px-2 py-1 rounded-md">15% OFF</span>
                             </label>
 
-                            <!-- Tarjeta de Crédito -->
-                            <label class="flex items-center justify-between p-3.5 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
+                            <!-- Tarjeta de Crédito (Con los ID necesarios para el bloqueo) -->
+                            <label id="opcion-tarjeta" class="flex items-center justify-between p-3.5 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
                                 <div class="flex items-center gap-3">
                                     <input type="radio" name="pago" value="tarjeta" onchange="actualizarCalculoPago()" class="text-marca-600 focus:ring-marca-500">
                                     <div>
-                                        <span class="font-bold text-xs text-stone-900 block">Tarjeta de Crédito / Débito</span>
-                                        <span class="text-[11px] text-stone-500">Hasta 12 cuotas sin interés en el local</span>
+                                     <span class="font-bold text-xs text-stone-900 block">Tarjeta de Crédito / Débito</span>
+                                        <span id="subtexto-tarjeta" class="text-[11px] text-stone-500">Hasta 12 cuotas sin interés en el local</span>
                                     </div>
                                 </div>
-                                <div class="flex gap-1 text-stone-400">
+                                    <div class="flex gap-1 text-stone-400">
                                     <i class="fa-brands fa-cc-visa text-lg"></i>
                                     <i class="fa-brands fa-cc-mastercard text-lg"></i>
                                 </div>
@@ -1075,5 +1075,54 @@
             document.getElementById('contenedor-previsualizacion').classList.add('hidden');
         }
     </script>
+    <script>
+    function alternarCampoDireccion(esEnvio) {
+        // Manejar el campo de la dirección
+        const contenedorDireccion = document.getElementById('contenedor-direccion');
+        const inputDireccion = document.getElementById('direccion-cliente');
+        
+        if (contenedorDireccion && inputDireccion) {
+            if (esEnvio) {
+                contenedorDireccion.classList.remove('hidden');
+                inputDireccion.required = true;
+            } else {
+                contenedorDireccion.classList.add('hidden');
+                inputDireccion.required = false;
+            }
+        }
+
+        // Bloquear o desbloquear la tarjeta de crédito según la entrega
+        const labelTarjeta = document.getElementById('opcion-tarjeta');
+        const radioTarjeta = document.querySelector('input[name="pago"][value="tarjeta"]');
+        const subtextoTarjeta = document.getElementById('subtexto-tarjeta');
+
+        if (labelTarjeta && radioTarjeta && subtextoTarjeta) {
+            if (esEnvio) {
+                // Si tenía seleccionada la tarjeta y elige envío, la pasamos a transferencia
+                if (radioTarjeta.checked) {
+                    const radioTransf = document.querySelector('input[name="pago"][value="transferencia"]');
+                    if (radioTransf) radioTransf.checked = true;
+                    if (typeof actualizarCalculoPago === 'function') actualizarCalculoPago();
+                }
+                
+                // BLOQUEAR TARJETA
+                radioTarjeta.disabled = true;
+                labelTarjeta.style.opacity = "0.4";
+                labelTarjeta.style.pointerEvents = "none";
+                labelTarjeta.style.backgroundColor = "#f5f5f4";
+                subtextoTarjeta.textContent = 'No disponible para envío a domicilio';
+                subtextoTarjeta.style.color = "#e11d48";
+            } else {
+                // DESBLOQUEAR TARJETA (Retiro por sucursal)
+                radioTarjeta.disabled = false;
+                labelTarjeta.style.opacity = "1";
+                labelTarjeta.style.pointerEvents = "auto";
+                labelTarjeta.style.backgroundColor = "transparent";
+                subtextoTarjeta.textContent = 'Hasta 12 cuotas sin interés en el local';
+                subtextoTarjeta.style.color = "#78716c";
+            }
+        }
+    }
+</script>
 </body>
 </html>

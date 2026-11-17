@@ -494,7 +494,7 @@
             }
         });
     </script>
-    
+
     <!-- PIE DE PÁGINA (CON ENLACE DISCRETO DE ACCESO ADMIN) -->
     <footer class="bg-stone-900 text-stone-400 py-12 border-t border-stone-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -1148,5 +1148,54 @@
             document.getElementById('contenedor-previsualizacion').classList.add('hidden');
         }
     </script>
+    <script>
+    function alternarCampoDireccion(esEnvio) {
+        // Manejar el campo de la dirección
+        const contenedorDireccion = document.getElementById('contenedor-direccion');
+        const inputDireccion = document.getElementById('direccion-cliente');
+        
+        if (contenedorDireccion && inputDireccion) {
+            if (esEnvio) {
+                contenedorDireccion.classList.remove('hidden');
+                inputDireccion.required = true;
+            } else {
+                contenedorDireccion.classList.add('hidden');
+                inputDireccion.required = false;
+            }
+        }
+
+        // Bloquear o desbloquear la tarjeta de crédito según la entrega
+        const labelTarjeta = document.getElementById('opcion-tarjeta');
+        const radioTarjeta = document.querySelector('input[name="pago"][value="tarjeta"]');
+        const subtextoTarjeta = document.getElementById('subtexto-tarjeta');
+
+        if (labelTarjeta && radioTarjeta && subtextoTarjeta) {
+            if (esEnvio) {
+                // Si tenía seleccionada la tarjeta y elige envío, la pasamos a transferencia
+                if (radioTarjeta.checked) {
+                    const radioTransf = document.querySelector('input[name="pago"][value="transferencia"]');
+                    if (radioTransf) radioTransf.checked = true;
+                    if (typeof actualizarCalculoPago === 'function') actualizarCalculoPago();
+                }
+                
+                // BLOQUEAR TARJETA
+                radioTarjeta.disabled = true;
+                labelTarjeta.style.opacity = "0.4";
+                labelTarjeta.style.pointerEvents = "none";
+                labelTarjeta.style.backgroundColor = "#f5f5f4";
+                subtextoTarjeta.textContent = 'No disponible para envío a domicilio';
+                subtextoTarjeta.style.color = "#e11d48";
+            } else {
+                // DESBLOQUEAR TARJETA (Retiro por sucursal)
+                radioTarjeta.disabled = false;
+                labelTarjeta.style.opacity = "1";
+                labelTarjeta.style.pointerEvents = "auto";
+                labelTarjeta.style.backgroundColor = "transparent";
+                subtextoTarjeta.textContent = 'Hasta 12 cuotas sin interés en el local';
+                subtextoTarjeta.style.color = "#78716c";
+            }
+        }
+    }
+</script>
 </body>
 </html>
