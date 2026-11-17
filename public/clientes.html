@@ -444,6 +444,44 @@
         </div>
     </div>
 
+    <!-- SCRIPT DE BLOQUEO DE TARJETA -->
+    <script>
+        function alternarCampoDireccion(esEnvio) {
+            const contenedorDireccion = document.getElementById('contenedor-direccion');
+            const inputDireccion = document.getElementById('direccion-cliente');
+            
+            if (esEnvio) {
+                contenedorDireccion.classList.remove('hidden');
+                inputDireccion.required = true;
+            } else {
+                contenedorDireccion.classList.add('hidden');
+                inputDireccion.required = false;
+            }
+
+            const labelTarjeta = document.getElementById('opcion-tarjeta');
+            const radioTarjeta = document.querySelector('input[name="pago"][value="tarjeta"]');
+            const subtextoTarjeta = document.getElementById('subtexto-tarjeta');
+
+            if (esEnvio) {
+                if (radioTarjeta.checked) {
+                    document.querySelector('input[name="pago"][value="transferencia"]').checked = true;
+                    if (typeof actualizarCalculoPago === 'function') actualizarCalculoPago();
+                }
+                radioTarjeta.disabled = true;
+                labelTarjeta.classList.add('opacity-50', 'bg-stone-100', 'cursor-not-allowed', 'pointer-events-none');
+                labelTarjeta.classList.remove('cursor-pointer', 'hover:bg-stone-50');
+                subtextoTarjeta.textContent = 'No disponible para envío a domicilio';
+                subtextoTarjeta.classList.add('text-rose-600');
+            } else {
+                radioTarjeta.disabled = false;
+                labelTarjeta.classList.remove('opacity-50', 'bg-stone-100', 'cursor-not-allowed', 'pointer-events-none');
+                labelTarjeta.classList.add('cursor-pointer', 'hover:bg-stone-50');
+                subtextoTarjeta.textContent = 'Hasta 12 cuotas sin interés en el local';
+                subtextoTarjeta.classList.remove('text-rose-600');
+            }
+        }
+    </script>
+
     <!-- PIE DE PÁGINA (CON ENLACE DISCRETO DE ACCESO ADMIN) -->
     <footer class="bg-stone-900 text-stone-400 py-12 border-t border-stone-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
