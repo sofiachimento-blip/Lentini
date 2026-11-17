@@ -322,7 +322,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE PAGO / CHECKOUT -->
+     <!-- MODAL DE PAGO / CHECKOUT -->
     <div id="modal-pago" class="fixed inset-0 z-50 hidden animacion-aparecer overflow-y-auto">
         <div onclick="cerrarModalPago()" class="fixed inset-0 bg-stone-900/70 backdrop-blur-sm"></div>
         
@@ -388,12 +388,12 @@
                                 <span class="bg-emerald-100 text-emerald-800 text-[10px] font-black px-2 py-1 rounded-md">15% OFF</span>
                             </label>
 
-                            <label class="flex items-center justify-between p-3.5 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
+                            <label id="opcion-tarjeta" class="flex items-center justify-between p-3.5 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
                                 <div class="flex items-center gap-3">
                                     <input type="radio" name="pago" value="tarjeta" onchange="actualizarCalculoPago()" class="text-marca-600 focus:ring-marca-500">
                                     <div>
                                         <span class="font-bold text-xs text-stone-900 block">Tarjeta de Crédito / Débito</span>
-                                        <span class="text-[11px] text-stone-500">Hasta 12 cuotas sin interés en el local</span>
+                                        <span id="subtexto-tarjeta" class="text-[11px] text-stone-500">Hasta 12 cuotas sin interés en el local</span>
                                     </div>
                                 </div>
                                 <div class="flex gap-1 text-stone-400">
@@ -441,6 +441,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- PIE DE PÁGINA (CON ENLACE DISCRETO DE ACCESO ADMIN) -->
     <footer class="bg-stone-900 text-stone-400 py-12 border-t border-stone-800">
